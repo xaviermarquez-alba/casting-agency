@@ -21,24 +21,24 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InhPR1JhQkdoNGRJVURMTXlMM3RiSiJ9.eyJ
 
 ## Local Deployment 
 
-###1. Install Python
+### 1. Install Python
 
 - Install Python 3.7 (https://www.python.org/downloads/)
 
-###2. Setup Virtual Enviroment
+### 2. Setup Virtual Enviroment
 
 ```bash
 virtualenv -p python3.7 venv
 source venv/bin/activate
 ```
 
-###3. Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-###4. Setup Environment Variables
+### 4. Setup Environment Variables
 The env variables can be set running setup.sh. Before running the script set the database URI string to your local database
 
 ```bash
@@ -46,7 +46,7 @@ sudo chmod +x setup.sh
 source ./setup.sh
 ```
 
-###5. Database Manage & Migrations
+### 5. Database Manage & Migrations
 
 ```bash
 python manage.py db init
