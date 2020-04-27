@@ -9,7 +9,7 @@ GET_TOKEN=$(curl --request POST \
   --url https://${AUTH0_DOMAIN}/oauth/token \
   --header 'content-type: application/json' \
   --data '{"client_id": '${CLIENT_ID}',"client_secret":'$CLIENT_SECRET',"audience":'$AUDIENCE',"grant_type":"client_credentials"}')
-
+# JWT Toke with all permissions
 export JWT_TOKEN=`echo ${GET_TOKEN} | jq -r '.access_token'`
 # JWT for test RBAC expires (2020-05-04)
 export JWT_CASTING_ASSIST='eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InhPR1JhQkdoNGRJVURMTXlMM3RiSiJ9.eyJpc3MiOiJodHRwczovL3hhdmllcm1tLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZWE2MThiOTZiNjliYzBjMTJkODFjOGUiLCJhdWQiOiJjYXN0aW5nLWFnZW5jeSIsImlhdCI6MTU4Nzk0NTkzMiwiZXhwIjoxNTg4NjM3MTMyLCJhenAiOiIwVzdJWWhuWmR3c1ptOHJDRWVESFQ4UGthUW5vZHFQdiIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOlsiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiXX0.g2yRXA84xVaZTIpZxgggOeyKoU3A89bb2oqaYrJW4cDEoMwrHEW-6D4dJgOsPJPbwgWwIFpsvu4qPN7AhN-8XrFgNgZ3HfTal0p2Dt0gSmVtTzE11Ol1pRtuRqOK87-LXOFq99PXNyci8AvREeIlM4wET8GU3GxdxtwsCicSg26W-xYsTOMEg0YYOu6oxiCeEHssxeewiqsd9uqF6HIED8MlZOhiTlfDTL_reAF1h2nu4E6J9n6zvb3gkXZGtalJ8pL0WgDTI9ewwXnS69OQJZXsuG131N86eTwzPexCRpbH5QG8sxm4h8OvoamBFXTNAmESH7xS236vSwasz2OrPw'
