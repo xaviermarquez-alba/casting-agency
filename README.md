@@ -1,4 +1,6 @@
 # Casting Agency API
+Final project from Udacity Full Stack Nanodegree.
+The motivation for doing this project was primarily an interest to enhance my skills, experiences, and capabilities creating apps.
 
 # Live Host Heroku
 
@@ -17,37 +19,34 @@ Executive Producer Token
 eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InhPR1JhQkdoNGRJVURMTXlMM3RiSiJ9.eyJpc3MiOiJodHRwczovL3hhdmllcm1tLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1ZWE2MjM2NzFjYzFhYzBjMTQ2OGEyZTAiLCJhdWQiOiJjYXN0aW5nLWFnZW5jeSIsImlhdCI6MTU4Nzk0NjQ3OSwiZXhwIjoxNTg4NjM3Njc5LCJhenAiOiIwVzdJWWhuWmR3c1ptOHJDRWVESFQ4UGthUW5vZHFQdiIsImd0eSI6InBhc3N3b3JkIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9ycyIsImRlbGV0ZTptb3ZpZXMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsInBhdGNoOmFjdG9ycyIsInBhdGNoOm1vdmllcyIsInBvc3Q6YWN0b3JzIiwicG9zdDptb3ZpZXMiXX0.NFzA-Mc7S8GrScsSk8uOgswCtVaxpndKQDHGT5-gprAXu3aW6m3AU93Li4qYZ9NvcB6K8rfGk2dERkZ62Erzr4OILfmj05IeIbSGlf1PFh-GakfkslC8ATOTh0x-3Bmcs5MNV9rbIVLdIQrmAIMfGezhMzGMd12DGRh2MX6k47Bw6lZVCuQfjlJmtJegZ7wTdYJ3me585qW8NRTjYKhNtKAxpZX-7brMc9nWhVwsgyFBigEYtudErULPGh2ZvaPlCMZn4PyqJHzciBmrTAlKrrl66tC3rl4wU1lu_0Xh-5SRKIq0SkG8c4j2siFU6ScDnPCzK695GpCQ2MKhDkEFdw
 ```
 
-The JWT tokens are included in the setup.sh
-
-
 ## Local Deployment 
 
-### Install Python
+###1. Install Python
 
 - Install Python 3.7 (https://www.python.org/downloads/)
 
-### Setup Virtual Enviroment
+###2. Setup Virtual Enviroment
 
 ```bash
 virtualenv -p python3.7 venv
 source venv/bin/activate
 ```
 
-#### Install Dependencies
+###3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Setup Environment Variables
-The required ENV variables can be set runing setup.sh, before runing modify the database URI:
+###4. Setup Environment Variables
+The env variables can be set running setup.sh. Before running the script set the database URI string to your local database
 
 ```bash
 sudo chmod +x setup.sh 
 source ./setup.sh
 ```
 
-### Database Manage & Migrations
+###5. Database Manage & Migrations
 
 ```bash
 python manage.py db init
@@ -55,10 +54,9 @@ python manage.py db migrate
 python manage.py db upgrade
 ```
 
-
 ## Running the server
 
-Finally to run the server, execute:
+Finally to run the server:
 
 ```bash
 flask run
@@ -212,7 +210,7 @@ DELETE '/movies/<int:actor_id>'
 
 
 ## Testing
-To run the tests, run:
+To run the Test Cases:
 ```
 python test_app.py
 ```
