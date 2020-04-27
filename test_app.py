@@ -1,9 +1,11 @@
-import unittest, json
+import unittest
+import json
 from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import setup_db, Actor, Movie
 import os
 from datetime import datetime
+
 
 class AgencyTestCase(unittest.TestCase):
     """This class represents the Casting Agency test case"""
@@ -14,9 +16,12 @@ class AgencyTestCase(unittest.TestCase):
     actor_test_delete = Actor(name='actor delete test', age=30, gender='male')
     actor_test_delete.insert()
 
-    movie_test_update = Movie(title='movie update test', release_date=datetime.strptime('1999-01-01','%Y-%m-%d'))
+    release_date_test = datetime.strptime('1999-01-01', '%Y-%m-%d')
+    movie_test_update = Movie(
+        title='movie update test', release_date=release_date_test)
     movie_test_update.insert()
-    movie_test_delete = Movie(title='movie delete test', release_date=datetime.strptime('1999-01-01','%Y-%m-%d'))
+    movie_test_delete = Movie(
+        title='movie delete test', release_date=release_date_test)
     movie_test_delete.insert()
 
     def setUp(self):
@@ -69,25 +74,30 @@ class AgencyTestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # Remove test data for actor and movie after all tests
-        movie_update_test = Movie.query.filter(Movie.title == 'movie update test').one_or_none()
+        movie_update_test = Movie.query.filter(
+            Movie.title == 'movie update test').one_or_none()
         if movie_update_test:
             movie_update_test.delete()
-        
-        movie_delete_test = Movie.query.filter(Movie.title == 'movie update test').one_or_none()
+
+        movie_delete_test = Movie.query.filter(
+            Movie.title == 'movie update test').one_or_none()
         if movie_delete_test:
             movie_delete_test.delete()
 
-        actor_test_update = Actor.query.filter(Actor.name == 'actor update test').one_or_none()
-        if actor_test_update: 
+        actor_test_update = Actor.query.filter(
+            Actor.name == 'actor update test').one_or_none()
+        if actor_test_update:
             actor_test_update.delete()
-        
-        actor_test_delete = Actor.query.filter(Actor.name == 'actor update test').one_or_none()
+
+        actor_test_delete = Actor.query.filter(
+            Actor.name == 'actor update test').one_or_none()
         if actor_test_delete:
             actor_test_delete.delete()
 
     # Test GET movies
     def test_get_movies(self):
-        res = self.client().get('/movies', headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().get('/movies', headers={
+            "Authorization": "Bearer {}".format(self.jwt_all_permissions)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -96,7 +106,8 @@ class AgencyTestCase(unittest.TestCase):
 
     # Test GET actors
     def test_get_actors(self):
-        res = self.client().get('/actors', headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().get('/actors', headers={
+            "Authorization": "Bearer {}".format(self.jwt_all_permissions)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -105,9 +116,12 @@ class AgencyTestCase(unittest.TestCase):
 
     # Test POST new movie
     def test_create_new_movie(self):
-        res = self.client().post('/movies', json=self.new_movie, headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().post('/movies', json=self.new_movie,
+                                 headers={"Authorization": "Bearer {}".format(
+                                     self.jwt_all_permissions)})
         data = json.loads(res.data)
-        new_movie = Movie.query.filter(Movie.id == data['movie_id']).one_or_none()
+        new_movie = Movie.query.filter(
+            Movie.id == data['movie_id']).one_or_none()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['movie_id'])
@@ -115,9 +129,12 @@ class AgencyTestCase(unittest.TestCase):
 
     # Test POST new actor
     def test_create_new_actor(self):
-        res = self.client().post('/actors', json=self.new_actor, headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().post('/actors', json=self.new_actor,
+                                 headers={"Authorization": "Bearer {}".format(
+                                     self.jwt_all_permissions)})
         data = json.loads(res.data)
-        new_actor = Actor.query.filter(Actor.id == data['actor_id']).one_or_none()
+        new_actor = Actor.query.filter(
+            Actor.id == data['actor_id']).one_or_none()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['actor_id'])
@@ -125,8 +142,11 @@ class AgencyTestCase(unittest.TestCase):
 
     # Test PATCH movie
     def test_update_movie(self):
-        movie_update = Movie.query.filter(Movie.title=='movie update test').one_or_none()
-        res = self.client().patch('/movies/'+ str(movie_update.id), json=self.update_movie_date, headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        movie_update = Movie.query.filter(
+            Movie.title == 'movie update test').one_or_none()
+        res = self.client().patch('/movies/' + str(movie_update.id),
+                                  json=self.update_movie_date, headers={
+            "Authorization": "Bearer {}".format(self.jwt_all_permissions)})
         data = json.loads(res.data)
 
         # check if movie was updated
@@ -138,8 +158,11 @@ class AgencyTestCase(unittest.TestCase):
 
     # Error update movie without  parameters
     def test_422_if_movie_missing_parameters(self):
-        movie_update = Movie.query.filter(Movie.title=='movie update test').one_or_none()
-        res = self.client().patch('/movies/'+ str(movie_update.id), headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        movie_update = Movie.query.filter(
+            Movie.title == 'movie update test').one_or_none()
+        res = self.client().patch('/movies/' + str(movie_update.id),
+                                  headers={"Authorization": "Bearer {}".format(
+                                      self.jwt_all_permissions)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
@@ -147,8 +170,11 @@ class AgencyTestCase(unittest.TestCase):
 
     # Test PATCH actor
     def test_update_actor(self):
-        actor_update = Actor.query.filter(Actor.name=='actor update test').one_or_none()
-        res = self.client().patch('/actors/'+ str(actor_update.id), json=self.update_actor_age, headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        actor_update = Actor.query.filter(
+            Actor.name == 'actor update test').one_or_none()
+        res = self.client().patch('/actors/' + str(actor_update.id),
+                                  json=self.update_actor_age, headers={
+            "Authorization": "Bearer {}".format(self.jwt_all_permissions)})
         data = json.loads(res.data)
         # check if actor was updated
         actor = Actor.query.filter(Actor.id == actor_update.id).one_or_none()
@@ -159,34 +185,44 @@ class AgencyTestCase(unittest.TestCase):
 
     # Error update actor without  parameters
     def test_422_if_actor_missing_parameters(self):
-        actor_update = Actor.query.filter(Actor.name=='actor update test').one_or_none()
-        res = self.client().patch('/actors/' + str(actor_update.id), headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        actor_update = Actor.query.filter(
+            Actor.name == 'actor update test').one_or_none()
+        res = self.client().patch('/actors/' + str(actor_update.id),
+                                  headers={"Authorization": "Bearer {}".format(
+                                      self.jwt_all_permissions)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Unprocessable entity')
 
-    # Error create actor missing gender 
+    # Error create actor missing gender
     def test_400_for_failed_created_actor(self):
-        res = self.client().post('/actors', json=self.new_actor_missing_attribute, headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().post('/actors',
+                                 json=self.new_actor_missing_attribute,
+                                 headers={"Authorization": "Bearer {}".format(
+                                     self.jwt_all_permissions)})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Bad request')
 
-    # Error create movie missing release date 
+    # Error create movie missing release date
     def test_400_for_failed_created_movie(self):
-        res = self.client().post('/movies', json=self.new_movie_missing_attribute, headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().post('/movies',
+                                 json=self.new_movie_missing_attribute,
+                                 headers={"Authorization": "Bearer {}".format(
+                                     self.jwt_all_permissions)})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Bad request')
-    
+
     # Error delete movie not found
     def test_404_if_movie_does_not_exist(self):
-        res = self.client().delete('/movies/999', headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().delete('/movies/999', headers={
+            "Authorization": "Bearer {}".format(self.jwt_all_permissions)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
@@ -194,7 +230,8 @@ class AgencyTestCase(unittest.TestCase):
 
     # Error delete actor not found
     def test_404_if_actor_does_not_exist(self):
-        res = self.client().delete('/actors/999', headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        res = self.client().delete('/actors/999', headers={
+            "Authorization": "Bearer {}".format(self.jwt_all_permissions)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
@@ -202,8 +239,12 @@ class AgencyTestCase(unittest.TestCase):
 
     # Test DELETE movie
     def test_delete_movie(self):
-        movie_delete = Movie.query.filter(Movie.title=='movie delete test').one_or_none()
-        res = self.client().delete('/movies/'+ str(movie_delete.id), headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        movie_delete = Movie.query.filter(
+            Movie.title == 'movie delete test').one_or_none()
+        res = self.client().delete('/movies/' + str(movie_delete.id),
+                                   headers={
+                                   "Authorization": "Bearer {}".format(
+                                       self.jwt_all_permissions)})
         data = json.loads(res.data)
         movie = Movie.query.filter(Movie.id == movie_delete.id).one_or_none()
 
@@ -214,8 +255,12 @@ class AgencyTestCase(unittest.TestCase):
 
     # Test DELETE actor
     def test_delete_actor(self):
-        actor_delete = Actor.query.filter(Actor.name=='actor delete test').one_or_none()
-        res = self.client().delete('/actors/'+ str(actor_delete.id), headers={"Authorization": "Bearer {}".format(self.jwt_all_permissions)})
+        actor_delete = Actor.query.filter(
+            Actor.name == 'actor delete test').one_or_none()
+        res = self.client().delete('/actors/' + str(actor_delete.id),
+                                   headers={
+                                   "Authorization": "Bearer {}".format(
+                                       self.jwt_all_permissions)})
         data = json.loads(res.data)
         actor = Actor.query.filter(Actor.id == actor_delete.id).one_or_none()
 
@@ -227,13 +272,18 @@ class AgencyTestCase(unittest.TestCase):
     # Tests RBAC
     # Test Casting Assitant
     def test_create_new_actor_casting_assistant(self):
-        res = self.client().post('/actors', headers={"Authorization": "Bearer {}".format(self.jwt_casting_assistant)}, json=self.new_actor)
+        res = self.client().post('/actors', headers={
+            "Authorization": "Bearer {}".format(
+                self.jwt_casting_assistant)}, json=self.new_actor)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(data['message'], {'code': 'unauthorized', 'description':'Permission not found.'})
+        self.assertEqual(
+            data['message'],
+            {'code': 'unauthorized', 'description': 'Permission not found.'})
 
     def test_get_movies_casting_assistant(self):
-        res = self.client().get('/movies', headers={"Authorization": "Bearer {}".format(self.jwt_casting_assistant)})
+        res = self.client().get('/movies', headers={
+            "Authorization": "Bearer {}".format(self.jwt_casting_assistant)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -242,40 +292,54 @@ class AgencyTestCase(unittest.TestCase):
 
     # Tests Casting Director
     def test_create_new_actor_casting_director(self):
-        res = self.client().post('/actors', headers={"Authorization": "Bearer {}".format(self.jwt_casting_director)}, json=self.new_actor)
+        res = self.client().post('/actors',
+                                 headers={"Authorization": "Bearer {}".format(
+                                     self.jwt_casting_director)},
+                                 json=self.new_actor)
         data = json.loads(res.data)
-        new_actor = Actor.query.filter(Actor.id == data['actor_id']).one_or_none()
+        new_actor = Actor.query.filter(
+            Actor.id == data['actor_id']).one_or_none()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['actor_id'])
         self.assertTrue(new_actor)
 
     def test_create_new_movie_casting_director(self):
-        res = self.client().post('/movies', json=self.new_movie, headers={"Authorization": "Bearer {}".format(self.jwt_casting_director)})
+        res = self.client().post('/movies',
+                                 json=self.new_movie,
+                                 headers={"Authorization": "Bearer {}".format(
+                                     self.jwt_casting_director)})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
-        self.assertEqual(data['message'], {'code': 'unauthorized', 'description':'Permission not found.'})
+        self.assertEqual(
+            data['message'],
+            {'code': 'unauthorized', 'description': 'Permission not found.'})
 
     # Test Executive Producer
     def test_create_new_actor_executive_producer(self):
-        res = self.client().post('/actors', headers={"Authorization": "Bearer {}".format(self.jwt_executive_producer)}, json=self.new_actor)
+        res = self.client().post('/actors', headers={
+            "Authorization": "Bearer {}".format(self.jwt_executive_producer)},
+            json=self.new_actor)
         data = json.loads(res.data)
-        new_actor = Actor.query.filter(Actor.id == data['actor_id']).one_or_none()
+        new_actor = Actor.query.filter(
+            Actor.id == data['actor_id']).one_or_none()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['actor_id'])
         self.assertTrue(new_actor)
 
     def test_create_new_movie_executive_producer(self):
-        res = self.client().post('/movies', json=self.new_movie, headers={"Authorization": "Bearer {}".format(self.jwt_executive_producer)})
+        res = self.client().post('/movies',
+                                 json=self.new_movie,
+                                 headers={"Authorization": "Bearer {}".format(
+                                     self.jwt_executive_producer)})
         data = json.loads(res.data)
-        new_movie = Movie.query.filter(Movie.id == data['movie_id']).one_or_none()
+        new_movie = Movie.query.filter(
+            Movie.id == data['movie_id']).one_or_none()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['movie_id'])
         self.assertTrue(new_movie)
-
-
 
 
 # Make the tests conveniently executable

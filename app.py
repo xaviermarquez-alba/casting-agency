@@ -4,6 +4,7 @@ from models import *
 from auth import AuthError, requires_auth
 from datetime import datetime
 
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
@@ -56,13 +57,16 @@ def create_app(test_config=None):
             abort(422)
 
         # if missing some required data
-        if any(parameter is None for parameter in [movie_title, movie_release_date]):
+        movie_parameters = [movie_title, movie_release_date]
+        if any(parameter is None for parameter in movie_parameters):
             abort(400)
 
         try:
             # create new movie
-            movie_release_date = datetime.strptime(movie_release_date, "%Y-%m-%d")
-            new_movie = Movie(title=movie_title, release_date=movie_release_date)
+            movie_release_date = datetime.strptime(
+                movie_release_date, "%Y-%m-%d")
+            new_movie = Movie(title=movie_title,
+                              release_date=movie_release_date)
             new_movie.insert()
             movie_id = new_movie.id
 
@@ -173,7 +177,8 @@ def create_app(test_config=None):
             if movie_title is not None:
                 movie.title = movie_title
             if movie_release_date is not None:
-                movie_release_date = datetime.strptime(movie_release_date, "%Y-%m-%d")
+                movie_release_date = datetime.strptime(
+                    movie_release_date, "%Y-%m-%d")
                 movie.release_date = movie_release_date
 
             movie.update()
@@ -184,7 +189,6 @@ def create_app(test_config=None):
 
         except KeyError:
             abort(422)
-
 
     # Update actor by ID
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
@@ -257,7 +261,6 @@ def create_app(test_config=None):
 
         except KeyError:
             abort(422)
-
 
     # Error Handling
     @app.errorhandler(400)
