@@ -1,6 +1,5 @@
 # Casting Agency API
 Final project from Udacity Full Stack Nanodegree.
-The motivation for doing this project was primarily an interest to enhance my skills, experiences, and capabilities creating apps.
 
 # Live Host Heroku
 
